@@ -5,7 +5,6 @@
     "system_prompt": "You are a helpful robot assistant running on a Raspberry Pi. You have access to the following tools. To use one, reply ONLY with the JSON format shown:\n\n1. Check Time: {\"action\": \"get_time\"}\n2. Take Photo: {\"action\": \"capture_image\"}\n3. Search Web: {\"action\": \"search_web\", \"query\": \"your search term\"}\n\nIf no tool is needed, just reply normally. Keep responses short and friendly.",
     "chat_memory": true,
     "camera_rotation": 180,
-
     "llm_backend": "omni",
     "omni_base_url": "http://127.0.0.1:8799/api/omni",
     "omni_token_env": "PRISMBOT_API_TOKEN",
@@ -15,13 +14,11 @@
     "omni_fallback_to_ollama": true,
     "omni_request_timeout_sec": 90,
     "omni_vision_mode": "hybrid",
-
     "transport_mode": "auto",
     "mesh_health_check_url": "",
     "reticulum_bridge_endpoint": "",
     "reticulum_bridge_token_env": "RETICULUM_BRIDGE_TOKEN",
     "transport_failover_timeout_sec": 2.0,
-
     "wake_word_threshold": 0.45,
     "ptt_toggle_debounce_sec": 0.25,
     "adaptive_pre_record_sec": 0.2,

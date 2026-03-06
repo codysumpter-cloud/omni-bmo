@@ -212,6 +212,14 @@ Run validation matrix static checks:
 ./scripts/run_validation_matrix.sh
 ```
 
+Apply runtime profile presets:
+
+```bash
+python3 ./scripts/apply_runtime_profile.py dev
+python3 ./scripts/apply_runtime_profile.py pi-live
+python3 ./scripts/apply_runtime_profile.py field
+```
+
 Apply a latency profile:
 
 ```bash
@@ -240,6 +248,7 @@ See: `docs/COMMS_LAYER_PLAN.md` for mesh/Reticulum resilience roadmap.
 See: `docs/VALIDATION_MATRIX.md` for release/stability checks.
 See: `docs/ATAK_INTEGRATION_PLAN.md` for ATAK bridge roadmap.
 See: `docs/OPENMANET_UPSTREAM.md` for upstream tracking policy and repo map.
+See: `docs/K3_1_INTERACTIVE_REPORT.md` and `docs/K4_OPERATOR_RUNBOOK.md` for execution/handoff.
 
 ## 🧠 Learn-First (before shell build)
 
