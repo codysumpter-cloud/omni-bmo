@@ -47,13 +47,17 @@ except Exception as e:
     raise SystemExit(0)
 
 for k in ['llm_backend','text_model','vision_model','omni_base_url','omni_model','omni_tool_route_mode','omni_fallback_to_ollama','omni_vision_mode',
-          'transport_mode','mesh_health_check_url','reticulum_bridge_endpoint','transport_failover_timeout_sec',
+          'transport_mode','mesh_health_check_url','reticulum_bridge_endpoint','reticulum_bridge_token_env','transport_failover_timeout_sec',
           'wake_word_threshold','silence_duration_sec','silence_threshold','tts_tail_sec']:
     print(f"  {k}: {cfg.get(k)}")
 
 token_env = cfg.get('omni_token_env','PRISMBOT_API_TOKEN')
 print(f"  omni_token_env: {token_env}")
 print(f"  token_present: {bool(os.getenv(token_env,''))}")
+
+rtok_env = cfg.get('reticulum_bridge_token_env','RETICULUM_BRIDGE_TOKEN')
+print(f"  reticulum_token_env: {rtok_env}")
+print(f"  reticulum_token_present: {bool(os.getenv(rtok_env,''))}")
 PY
 
 echo "[doctor] done"

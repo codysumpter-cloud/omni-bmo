@@ -19,6 +19,7 @@
     "transport_mode": "auto",
     "mesh_health_check_url": "",
     "reticulum_bridge_endpoint": "",
+    "reticulum_bridge_token_env": "RETICULUM_BRIDGE_TOKEN",
     "transport_failover_timeout_sec": 2.0,
 
     "wake_word_threshold": 0.45,

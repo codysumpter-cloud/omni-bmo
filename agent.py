@@ -31,6 +31,7 @@ import wave
 import struct
 import urllib.request
 import urllib.error
+import urllib.parse
 
 # Suppress harmless library warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning, module="duckduckgo_search")
@@ -81,6 +82,7 @@ DEFAULT_CONFIG = {
     "transport_mode": "auto",  # online|mesh|reticulum_fallback|auto
     "mesh_health_check_url": "",
     "reticulum_bridge_endpoint": "",
+    "reticulum_bridge_token_env": "RETICULUM_BRIDGE_TOKEN",
     "transport_failover_timeout_sec": 2.0,
 
     # Milestone E latency / wake / barge-in tuning
@@ -132,6 +134,7 @@ OMNI_VISION_MODE = str(CURRENT_CONFIG.get("omni_vision_mode", "hybrid")).strip()
 TRANSPORT_MODE = str(CURRENT_CONFIG.get("transport_mode", "auto")).strip().lower()  # online|mesh|reticulum_fallback|auto
 MESH_HEALTH_CHECK_URL = str(CURRENT_CONFIG.get("mesh_health_check_url", "")).strip()
 RETICULUM_BRIDGE_ENDPOINT = str(CURRENT_CONFIG.get("reticulum_bridge_endpoint", "")).strip()
+RETICULUM_BRIDGE_TOKEN_ENV = str(CURRENT_CONFIG.get("reticulum_bridge_token_env", "RETICULUM_BRIDGE_TOKEN")).strip()
 TRANSPORT_FAILOVER_TIMEOUT_SEC = float(CURRENT_CONFIG.get("transport_failover_timeout_sec", 2.0))
 
 # Latency tuning knobs
@@ -878,13 +881,54 @@ class BotGUI:
         return mode
 
     def reticulum_fallback_chat(self, user_text, messages):
-        # Milestone G stub: replace with real Reticulum bridge call in later milestone.
-        print(f"[RETICULUM_STUB] endpoint={RETICULUM_BRIDGE_ENDPOINT or 'unset'} user={user_text[:80]!r}", flush=True)
-        return {
-            "message": {
-                "content": "Reticulum fallback is configured as a placeholder right now. Omni network path is unavailable; local fallback should engage automatically."
+        if not RETICULUM_BRIDGE_ENDPOINT:
+            print("[RETICULUM] endpoint unset; returning local fallback notice", flush=True)
+            return {
+                "message": {
+                    "content": "Reticulum fallback endpoint is not configured yet."
+                }
             }
+
+        payload = {
+            "mode": "reticulum_fallback",
+            "text": str(user_text or "").strip(),
+            "messages": messages,
+            "client": "omni-bmo",
         }
+        data = json.dumps(payload).encode("utf-8")
+
+        headers = {"content-type": "application/json"}
+        tok = os.getenv(RETICULUM_BRIDGE_TOKEN_ENV, "").strip()
+        if tok:
+            headers["authorization"] = f"Bearer {tok}"
+
+        req = urllib.request.Request(RETICULUM_BRIDGE_ENDPOINT, data=data, method="POST", headers=headers)
+        try:
+            with urllib.request.urlopen(req, timeout=max(2.0, TRANSPORT_FAILOVER_TIMEOUT_SEC * 2.0)) as r:
+                body = json.loads(r.read().decode("utf-8", "ignore"))
+
+            # Accept flexible bridge response shapes.
+            msg = ""
+            if isinstance(body, dict):
+                msg = str(
+                    body.get("text")
+                    or body.get("message")
+                    or ((body.get("result") or {}).get("text") if isinstance(body.get("result"), dict) else "")
+                    or ""
+                ).strip()
+
+            if not msg:
+                msg = "Reticulum bridge responded but returned no text payload."
+
+            print(f"[RETICULUM] ok endpoint={RETICULUM_BRIDGE_ENDPOINT}", flush=True)
+            return {"message": {"content": msg}}
+
+        except urllib.error.HTTPError as e:
+            print(f"[RETICULUM] HTTP error: {e}", flush=True)
+            return {"message": {"content": f"Reticulum bridge HTTP error: {e.code}"}}
+        except Exception as e:
+            print(f"[RETICULUM] error: {e}", flush=True)
+            return {"message": {"content": f"Reticulum bridge unavailable: {e}"}}
 
     def _omni_chat_once(self, model, messages):
         payload = {

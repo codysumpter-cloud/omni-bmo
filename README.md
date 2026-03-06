@@ -133,11 +133,20 @@ Omni-specific knobs:
 - `omni_vision_mode`: `local|hybrid`
   - `hybrid` = get local vision caption, then answer with Omni text model
 
-Transport knobs (Milestone G/H):
+Transport knobs (Milestone G/H/J):
 - `transport_mode`: `online|mesh|reticulum_fallback|auto`
 - `mesh_health_check_url`: URL used to detect mesh path health
-- `reticulum_bridge_endpoint`: placeholder endpoint for Reticulum relay integration
+- `reticulum_bridge_endpoint`: HTTP bridge endpoint for Reticulum relay integration
+- `reticulum_bridge_token_env`: env var name for optional bridge bearer token
 - `transport_failover_timeout_sec`: timeout budget for transport health checks
+
+Reticulum bridge response contract (recommended):
+
+```json
+{ "text": "..." }
+```
+
+Accepted keys are `text`, `message`, or `result.text`.
 
 Runtime controls (Milestone H):
 - Hotkeys:
