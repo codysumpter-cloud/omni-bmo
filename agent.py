@@ -56,7 +56,6 @@ CONFIG_FILE = "config.json"
 MEMORY_FILE = "memory.json"
 BMO_IMAGE_FILE = "current_image.jpg"
 WAKE_WORD_MODEL = "./wakeword.onnx"
-WAKE_WORD_THRESHOLD = 0.5
 
 # HARDWARE SETTINGS
 INPUT_DEVICE_NAME = None 
@@ -76,7 +75,18 @@ DEFAULT_CONFIG = {
     "omni_stream_chunk_chars": 48,
     "omni_fallback_to_ollama": True,
     "omni_request_timeout_sec": 90,
-    "omni_vision_mode": "hybrid"  # local|hybrid
+    "omni_vision_mode": "hybrid",  # local|hybrid
+
+    # Milestone E latency / wake / barge-in tuning
+    "wake_word_threshold": 0.45,
+    "ptt_toggle_debounce_sec": 0.25,
+    "adaptive_pre_record_sec": 0.20,
+    "ptt_pre_record_sec": 0.15,
+    "silence_threshold": 0.0055,
+    "silence_duration_sec": 0.65,
+    "max_record_time_sec": 8.0,
+    "tts_tail_sec": 0.20,
+    "thinking_sound_initial_delay_sec": 0.25
 }
 
 # LLM SETTINGS
@@ -111,6 +121,17 @@ OMNI_STREAM_CHUNK_CHARS = int(CURRENT_CONFIG.get("omni_stream_chunk_chars", 48))
 OMNI_FALLBACK_TO_OLLAMA = bool(CURRENT_CONFIG.get("omni_fallback_to_ollama", True))
 OMNI_REQUEST_TIMEOUT_SEC = int(CURRENT_CONFIG.get("omni_request_timeout_sec", 90))
 OMNI_VISION_MODE = str(CURRENT_CONFIG.get("omni_vision_mode", "hybrid")).strip().lower()  # local|hybrid
+
+# Latency tuning knobs
+WAKE_WORD_THRESHOLD = float(CURRENT_CONFIG.get("wake_word_threshold", 0.45))
+PTT_TOGGLE_DEBOUNCE_SEC = float(CURRENT_CONFIG.get("ptt_toggle_debounce_sec", 0.25))
+ADAPTIVE_PRE_RECORD_SEC = float(CURRENT_CONFIG.get("adaptive_pre_record_sec", 0.20))
+PTT_PRE_RECORD_SEC = float(CURRENT_CONFIG.get("ptt_pre_record_sec", 0.15))
+SILENCE_THRESHOLD = float(CURRENT_CONFIG.get("silence_threshold", 0.0055))
+SILENCE_DURATION_SEC = float(CURRENT_CONFIG.get("silence_duration_sec", 0.65))
+MAX_RECORD_TIME_SEC = float(CURRENT_CONFIG.get("max_record_time_sec", 8.0))
+TTS_TAIL_SEC = float(CURRENT_CONFIG.get("tts_tail_sec", 0.20))
+THINKING_SOUND_INITIAL_DELAY_SEC = float(CURRENT_CONFIG.get("thinking_sound_initial_delay_sec", 0.25))
 
 class BotStates:
     IDLE = "idle"             
@@ -285,7 +306,7 @@ class BotGUI:
 
     def handle_ptt_toggle(self, event=None):
         current_time = time.time()
-        if current_time - self.last_ptt_time < 0.5: 
+        if current_time - self.last_ptt_time < max(0.05, PTT_TOGGLE_DEBOUNCE_SEC): 
             return 
         self.last_ptt_time = current_time
 
@@ -650,15 +671,15 @@ class BotGUI:
 
     def record_voice_adaptive(self, filename="input.wav"):
         print("Recording (Adaptive)...", flush=True)
-        time.sleep(0.5) 
+        time.sleep(max(0.0, ADAPTIVE_PRE_RECORD_SEC)) 
         try:
             device_info = sd.query_devices(kind='input')
             samplerate = int(device_info['default_samplerate'])
         except: samplerate = 44100 
 
-        silence_threshold = 0.006
-        silence_duration = 1.5
-        max_record_time = 30.0
+        silence_threshold = max(0.0001, SILENCE_THRESHOLD)
+        silence_duration = max(0.2, SILENCE_DURATION_SEC)
+        max_record_time = max(2.0, MAX_RECORD_TIME_SEC)
         buffer = []
         silent_chunks = 0
         chunk_duration = 0.05 
@@ -691,7 +712,7 @@ class BotGUI:
 
     def record_voice_ptt(self, filename="input.wav"):
         print("Recording (PTT)...", flush=True)
-        time.sleep(0.5)
+        time.sleep(max(0.0, PTT_PRE_RECORD_SEC))
         try:
             device_info = sd.query_devices(kind='input')
             samplerate = int(device_info['default_samplerate'])
@@ -1009,7 +1030,7 @@ class BotGUI:
                         stream.write(audio_chunk.tobytes())
                     else:
                         self.current_volume = 0
-                time.sleep(0.5) 
+                time.sleep(max(0.0, TTS_TAIL_SEC)) 
                     
         except Exception as e:
             print(f"Audio Error: {e}")
@@ -1021,7 +1042,7 @@ class BotGUI:
                 self.current_audio_process = None
 
     def _run_thinking_sound_loop(self):
-        time.sleep(0.5)
+        time.sleep(max(0.0, THINKING_SOUND_INITIAL_DELAY_SEC))
         while self.thinking_sound_active.is_set():
             sound = self.get_random_sound(thinking_sounds_dir)
             if sound: self.play_sound(sound)

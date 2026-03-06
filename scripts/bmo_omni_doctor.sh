@@ -46,7 +46,8 @@ except Exception as e:
     print('[warn] cannot read config.json:', e)
     raise SystemExit(0)
 
-for k in ['llm_backend','text_model','vision_model','omni_base_url','omni_model','omni_tool_route_mode','omni_fallback_to_ollama','omni_vision_mode']:
+for k in ['llm_backend','text_model','vision_model','omni_base_url','omni_model','omni_tool_route_mode','omni_fallback_to_ollama','omni_vision_mode',
+          'wake_word_threshold','silence_duration_sec','silence_threshold','tts_tail_sec']:
     print(f"  {k}: {cfg.get(k)}")
 
 token_env = cfg.get('omni_token_env','PRISMBOT_API_TOKEN')

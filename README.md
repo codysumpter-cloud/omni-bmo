@@ -133,6 +133,17 @@ Omni-specific knobs:
 - `omni_vision_mode`: `local|hybrid`
   - `hybrid` = get local vision caption, then answer with Omni text model
 
+Latency / wake / barge-in knobs:
+- `wake_word_threshold`
+- `ptt_toggle_debounce_sec`
+- `adaptive_pre_record_sec`
+- `ptt_pre_record_sec`
+- `silence_threshold`
+- `silence_duration_sec`
+- `max_record_time_sec`
+- `tts_tail_sec`
+- `thinking_sound_initial_delay_sec`
+
 If `llm_backend` is `omni`, export your token env before running:
 
 ```bash
@@ -156,6 +167,12 @@ Run health checks:
 
 ```bash
 ./scripts/bmo_omni_doctor.sh
+```
+
+Apply a latency profile:
+
+```bash
+python3 ./scripts/apply_latency_profile.py snappy   # snappy|balanced|robust
 ```
 
 Launch with helper:

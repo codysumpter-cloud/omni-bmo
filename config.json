@@ -13,5 +13,14 @@
     "omni_stream_chunk_chars": 48,
     "omni_fallback_to_ollama": true,
     "omni_request_timeout_sec": 90,
-    "omni_vision_mode": "hybrid"
+    "omni_vision_mode": "hybrid",
+    "wake_word_threshold": 0.45,
+    "ptt_toggle_debounce_sec": 0.25,
+    "adaptive_pre_record_sec": 0.2,
+    "ptt_pre_record_sec": 0.15,
+    "silence_threshold": 0.0055,
+    "silence_duration_sec": 0.65,
+    "max_record_time_sec": 8.0,
+    "tts_tail_sec": 0.2,
+    "thinking_sound_initial_delay_sec": 0.25
 }
