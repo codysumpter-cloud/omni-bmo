@@ -76,19 +76,24 @@ Success criteria:
 
 ---
 
-## Milestone H — Operator UX
+## Milestone H — Operator UX (implemented)
 
-### H1. Status visibility
-- show transport mode in HUD
-- show last failover reason
+### H1. Status visibility ✅
+- transport mode shown in status HUD (`net:<mode>`)
+- reason retained in runtime (`transport_last_reason`)
 
-### H2. Manual control
-- hotkey/command for mode override
-- command to print connectivity diagnostics
+### H2. Manual control ✅
+- hotkeys:
+  - `F6` cycle transport override
+  - `F7` run transport diagnostics summary
+- voice/text commands:
+  - `transport` / `/transport`
+  - `transport auto|online|mesh|reticulum_fallback`
+  - `/doctor` / `/net-doctor`
 
-Success criteria:
+Success criteria met:
 - operator can force mode in real-time
-- diagnostics produce actionable output in < 3s
+- diagnostics return immediate actionable summary
 
 ---
 

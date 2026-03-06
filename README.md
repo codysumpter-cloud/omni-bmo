@@ -133,11 +133,20 @@ Omni-specific knobs:
 - `omni_vision_mode`: `local|hybrid`
   - `hybrid` = get local vision caption, then answer with Omni text model
 
-Transport knobs (Milestone G):
+Transport knobs (Milestone G/H):
 - `transport_mode`: `online|mesh|reticulum_fallback|auto`
 - `mesh_health_check_url`: URL used to detect mesh path health
 - `reticulum_bridge_endpoint`: placeholder endpoint for Reticulum relay integration
 - `transport_failover_timeout_sec`: timeout budget for transport health checks
+
+Runtime controls (Milestone H):
+- Hotkeys:
+  - `F6` cycle transport override (`auto -> online -> mesh -> reticulum_fallback`)
+  - `F7` run transport doctor summary
+- Voice/text commands:
+  - `transport` or `/transport` (status)
+  - `transport auto|online|mesh|reticulum_fallback` (override)
+  - `/doctor` or `/net-doctor` (diagnostics)
 
 Latency / wake / barge-in knobs:
 - `wake_word_threshold`

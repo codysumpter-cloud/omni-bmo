@@ -205,6 +205,8 @@ class BotGUI:
         # Inputs
         master.bind('<Return>', self.handle_ptt_toggle)
         master.bind('<space>', self.handle_speaking_interrupt)
+        master.bind('<F6>', self.handle_transport_cycle_hotkey)
+        master.bind('<F7>', self.handle_transport_doctor_hotkey)
         atexit.register(self.safe_exit)
         
         # State
@@ -344,6 +346,36 @@ class BotGUI:
                 try: self.current_audio_process.terminate()
                 except: pass
             self.set_state(BotStates.IDLE, "Interrupted.")
+
+    def _transport_doctor_summary(self):
+        selected = self.select_transport_mode()
+        mesh_ok = False
+        if MESH_HEALTH_CHECK_URL:
+            mesh_ok = self._http_ping(MESH_HEALTH_CHECK_URL, timeout_sec=TRANSPORT_FAILOVER_TIMEOUT_SEC)
+        omni_ok = self._http_ping(f"{OMNI_BASE_URL}/health", timeout_sec=TRANSPORT_FAILOVER_TIMEOUT_SEC)
+        return (
+            f"transport={selected}; reason={self.transport_last_reason}; "
+            f"omni_health={'ok' if omni_ok else 'down'}; "
+            f"mesh_health={'ok' if mesh_ok else ('n/a' if not MESH_HEALTH_CHECK_URL else 'down')}; "
+            f"reticulum={'set' if RETICULUM_BRIDGE_ENDPOINT else 'unset'}"
+        )
+
+    def handle_transport_cycle_hotkey(self, event=None):
+        order = ['auto', 'online', 'mesh', 'reticulum_fallback']
+        cur = str(getattr(self, 'transport_mode_override', '') or CURRENT_CONFIG.get('transport_mode', TRANSPORT_MODE)).strip().lower()
+        if cur not in order:
+            cur = 'auto'
+        nxt = order[(order.index(cur) + 1) % len(order)]
+        self.transport_mode_override = nxt
+        self.current_transport_mode = self.select_transport_mode()
+        msg = f"Transport mode -> {nxt} ({self.current_transport_mode})"
+        print(f"[TRANSPORT] {msg}", flush=True)
+        self.set_state(BotStates.IDLE, msg)
+
+    def handle_transport_doctor_hotkey(self, event=None):
+        summary = self._transport_doctor_summary()
+        print(f"[TRANSPORT_DOCTOR] {summary}", flush=True)
+        self.set_state(BotStates.IDLE, summary)
 
     def load_animations(self):
         base_path = "faces"
@@ -812,7 +844,7 @@ class BotGUI:
             return False
 
     def select_transport_mode(self):
-        mode = TRANSPORT_MODE
+        mode = str(getattr(self, 'transport_mode_override', '') or CURRENT_CONFIG.get('transport_mode', TRANSPORT_MODE)).strip().lower()
         reason = "configured"
 
         if mode in {"online", "mesh", "reticulum_fallback"}:
@@ -965,6 +997,28 @@ class BotGUI:
                 return ollama.chat(model=fallback_model, messages=messages, stream=False, options=OLLAMA_OPTIONS)
             raise
 
+    def handle_transport_command(self, text):
+        t = str(text or '').strip().lower()
+        if not t:
+            return None
+
+        if t in {'/transport', 'transport', 'net', '/net'}:
+            return self._transport_doctor_summary()
+
+        m = re.match(r'^(?:/)?(?:transport|net)\s+(auto|online|mesh|reticulum_fallback|reticulum)$', t)
+        if m:
+            mode = m.group(1)
+            if mode == 'reticulum':
+                mode = 'reticulum_fallback'
+            self.transport_mode_override = mode
+            self.current_transport_mode = self.select_transport_mode()
+            return f"Transport override set to {mode} (active: {self.current_transport_mode})."
+
+        if t in {'/doctor', '/net-doctor', '/transport-doctor'}:
+            return self._transport_doctor_summary()
+
+        return None
+
     # =========================================================================
     # 5. CHAT & RESPOND
     # =========================================================================
@@ -991,6 +1045,21 @@ class BotGUI:
         else:
             user_msg = {"role": "user", "content": text}
             messages = self.permanent_memory + self.session_memory + [user_msg]
+
+        # Milestone H: manual transport commands / diagnostics in UI loop.
+        if not img_path:
+            transport_reply = self.handle_transport_command(text)
+            if transport_reply:
+                self.thinking_sound_active.clear()
+                self.set_state(BotStates.SPEAKING, "Speaking...", cam_path=img_path)
+                self.append_to_text("BOT: ", newline=False)
+                self.append_to_text(transport_reply, newline=True)
+                with self.tts_queue_lock:
+                    self.tts_queue.append(transport_reply)
+                self.session_memory.append({"role": "assistant", "content": transport_reply})
+                self.wait_for_tts()
+                self.set_state(BotStates.IDLE, "Ready")
+                return
 
         # Milestone B: optional direct tool routing for Omni to reduce action-JSON dependence.
         if LLM_BACKEND == "omni" and not img_path and OMNI_TOOL_ROUTE_MODE in {"hybrid", "direct"}:
