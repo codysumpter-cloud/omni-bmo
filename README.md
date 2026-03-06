@@ -194,6 +194,12 @@ This software is a generic framework. You can give it a new personality by repla
 
 ## 🚀 BMO × Omni Ops Quickstart
 
+Install K.3.1 dependency bundle (Pi/Ubuntu):
+
+```bash
+./scripts/install_k3_deps.sh
+```
+
 Run health checks:
 
 ```bash

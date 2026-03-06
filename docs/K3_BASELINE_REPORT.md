@@ -61,7 +61,8 @@ These prevent full wake/STT/TTS field-loop verification on this host.
 
 ## Recommended next actions
 
-1. Install missing media/runtime dependencies on target device.
+1. Install missing media/runtime dependencies on target device using:
+   - `./scripts/install_k3_deps.sh`
 2. Set `reticulum_bridge_endpoint` to local mock and run voice-loop fallback drill.
 3. Add one mesh health endpoint and run `transport auto` failover checks with doctor logs.
 4. Record latency/failover timings in this report as K.3.1.
