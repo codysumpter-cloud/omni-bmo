@@ -116,7 +116,10 @@ You can modify the hardware behavior and personality in `config.json`. The `agen
     "omni_token_env": "PRISMBOT_API_TOKEN",
     "omni_model": "omni-core:phase2",
     "omni_tool_route_mode": "hybrid",
-    "omni_stream_chunk_chars": 48
+    "omni_stream_chunk_chars": 48,
+    "omni_fallback_to_ollama": true,
+    "omni_request_timeout_sec": 90,
+    "omni_vision_mode": "hybrid"
 }
 ```
 
@@ -125,6 +128,10 @@ Omni-specific knobs:
   - `hybrid` = direct route obvious tool intents (time/search/camera), fallback to JSON-action parsing
   - `direct` = strongest bias toward direct routing
 - `omni_stream_chunk_chars`: pseudo-stream chunk size for non-stream Omni replies
+- `omni_fallback_to_ollama`: if Omni endpoint errors/timeouts, auto-fallback to local Ollama
+- `omni_request_timeout_sec`: Omni HTTP timeout
+- `omni_vision_mode`: `local|hybrid`
+  - `hybrid` = get local vision caption, then answer with Omni text model
 
 If `llm_backend` is `omni`, export your token env before running:
 

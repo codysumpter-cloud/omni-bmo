@@ -10,5 +10,8 @@
     "omni_token_env": "PRISMBOT_API_TOKEN",
     "omni_model": "omni-core:phase2",
     "omni_tool_route_mode": "hybrid",
-    "omni_stream_chunk_chars": 48
+    "omni_stream_chunk_chars": 48,
+    "omni_fallback_to_ollama": true,
+    "omni_request_timeout_sec": 90,
+    "omni_vision_mode": "hybrid"
 }

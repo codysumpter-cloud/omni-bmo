@@ -71,7 +71,12 @@ DEFAULT_CONFIG = {
     "llm_backend": "ollama",  # ollama|omni
     "omni_base_url": "http://127.0.0.1:8799/api/omni",
     "omni_token_env": "PRISMBOT_API_TOKEN",
-    "omni_model": "omni-core:phase2"
+    "omni_model": "omni-core:phase2",
+    "omni_tool_route_mode": "hybrid",  # off|hybrid|direct
+    "omni_stream_chunk_chars": 48,
+    "omni_fallback_to_ollama": True,
+    "omni_request_timeout_sec": 90,
+    "omni_vision_mode": "hybrid"  # local|hybrid
 }
 
 # LLM SETTINGS
@@ -103,6 +108,9 @@ OMNI_TOKEN_ENV = str(CURRENT_CONFIG.get("omni_token_env", "PRISMBOT_API_TOKEN"))
 OMNI_MODEL = str(CURRENT_CONFIG.get("omni_model", "omni-core:phase2")).strip()
 OMNI_TOOL_ROUTE_MODE = str(CURRENT_CONFIG.get("omni_tool_route_mode", "hybrid")).strip().lower()  # off|hybrid|direct
 OMNI_STREAM_CHUNK_CHARS = int(CURRENT_CONFIG.get("omni_stream_chunk_chars", 48))
+OMNI_FALLBACK_TO_OLLAMA = bool(CURRENT_CONFIG.get("omni_fallback_to_ollama", True))
+OMNI_REQUEST_TIMEOUT_SEC = int(CURRENT_CONFIG.get("omni_request_timeout_sec", 90))
+OMNI_VISION_MODE = str(CURRENT_CONFIG.get("omni_vision_mode", "hybrid")).strip().lower()  # local|hybrid
 
 class BotStates:
     IDLE = "idle"             
@@ -763,7 +771,7 @@ class BotGUI:
             data=json.dumps(payload).encode("utf-8"),
             headers=self._omni_headers(),
         )
-        with urllib.request.urlopen(req, timeout=90) as r:
+        with urllib.request.urlopen(req, timeout=max(15, OMNI_REQUEST_TIMEOUT_SEC)) as r:
             data = json.loads(r.read().decode("utf-8", "ignore"))
 
         choices = data.get("choices") or []
@@ -774,19 +782,9 @@ class BotGUI:
             content = str(data.get("output") or "")
         return {"message": {"content": content}}
 
-    def llm_chat_stream(self, model, messages, img_path=None):
-        # Keep vision path on Ollama for now (Omni text endpoint doesn't ingest local image files directly).
-        if img_path or LLM_BACKEND != "omni":
-            return ollama.chat(model=model, messages=messages, stream=True, options=OLLAMA_OPTIONS)
-
-        one = self._omni_chat_once(model, messages)
-        content = str((one.get("message") or {}).get("content") or "")
-        if not content:
-            return []
-
+    def _chunk_text_for_stream(self, content):
         chunks = []
-        # Prefer sentence-ish chunks, then sub-chunk to keep UI/TTS responsive.
-        for part in re.split(r"(?<=[\.!\?])\s+", content):
+        for part in re.split(r"(?<=[\.!\?])\s+", str(content or "")):
             part = part.strip()
             if not part:
                 continue
@@ -797,12 +795,63 @@ class BotGUI:
                 sub = part[i:i + max(20, OMNI_STREAM_CHUNK_CHARS)]
                 if sub:
                     chunks.append({"message": {"content": sub}})
-        return chunks or [{"message": {"content": content}}]
+        return chunks or [{"message": {"content": str(content or "")}}]
+
+    def _local_vision_caption(self, user_text, img_path):
+        try:
+            vision_messages = [{
+                "role": "user",
+                "content": f"User asked: {user_text}\nDescribe this image in 2 short factual sentences for another assistant.",
+                "images": [img_path],
+            }]
+            resp = ollama.chat(model=VISION_MODEL, messages=vision_messages, stream=False, options=OLLAMA_OPTIONS)
+            return str((resp.get("message") or {}).get("content") or "").strip()
+        except Exception as e:
+            print(f"Vision caption fallback failed: {e}")
+            return ""
+
+    def _build_omni_messages(self, messages, img_path=None):
+        if not img_path or OMNI_VISION_MODE != "hybrid":
+            return messages
+        user_text = ""
+        if isinstance(messages, list) and messages:
+            user_text = str((messages[-1] or {}).get("content") or "")
+        caption = self._local_vision_caption(user_text, img_path)
+        if not caption:
+            return messages
+        combined = f"{user_text}\n\nVisual context from camera: {caption}".strip()
+        return [{"role": "user", "content": combined}]
+
+    def llm_chat_stream(self, model, messages, img_path=None):
+        if LLM_BACKEND != "omni":
+            return ollama.chat(model=model, messages=messages, stream=True, options=OLLAMA_OPTIONS)
+
+        try:
+            omni_messages = self._build_omni_messages(messages, img_path=img_path)
+            one = self._omni_chat_once(model if not img_path else OMNI_MODEL, omni_messages)
+            content = str((one.get("message") or {}).get("content") or "")
+            if not content:
+                return []
+            return self._chunk_text_for_stream(content)
+        except Exception as e:
+            print(f"Omni stream error: {e}")
+            if OMNI_FALLBACK_TO_OLLAMA:
+                fallback_model = VISION_MODEL if img_path else TEXT_MODEL
+                return ollama.chat(model=fallback_model, messages=messages, stream=True, options=OLLAMA_OPTIONS)
+            raise
 
     def llm_chat_once(self, model, messages, img_path=None):
-        if img_path or LLM_BACKEND != "omni":
+        if LLM_BACKEND != "omni":
             return ollama.chat(model=model, messages=messages, stream=False, options=OLLAMA_OPTIONS)
-        return self._omni_chat_once(model, messages)
+        try:
+            omni_messages = self._build_omni_messages(messages, img_path=img_path)
+            return self._omni_chat_once(model if not img_path else OMNI_MODEL, omni_messages)
+        except Exception as e:
+            print(f"Omni once error: {e}")
+            if OMNI_FALLBACK_TO_OLLAMA:
+                fallback_model = VISION_MODEL if img_path else TEXT_MODEL
+                return ollama.chat(model=fallback_model, messages=messages, stream=False, options=OLLAMA_OPTIONS)
+            raise
 
     # =========================================================================
     # 5. CHAT & RESPOND
@@ -818,7 +867,10 @@ class BotGUI:
             self.set_state(BotStates.IDLE, "Memory Wiped")
             return
 
-        model_to_use = VISION_MODEL if img_path else (OMNI_MODEL if LLM_BACKEND == "omni" else TEXT_MODEL)
+        if LLM_BACKEND == "omni":
+            model_to_use = OMNI_MODEL
+        else:
+            model_to_use = VISION_MODEL if img_path else TEXT_MODEL
         self.set_state(BotStates.THINKING, "Thinking...", cam_path=img_path)
         
         messages = []
