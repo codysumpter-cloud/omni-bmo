@@ -193,6 +193,7 @@ systemctl --user enable --now bmo-omni-agent.service
 ```
 
 See: `docs/BMO_OMNI_UPGRADE_PLAN.md` for milestone roadmap and guardrails.
+See: `docs/COMMS_LAYER_PLAN.md` for mesh/Reticulum resilience roadmap.
 
 ## 🧠 Learn-First (before shell build)
 
