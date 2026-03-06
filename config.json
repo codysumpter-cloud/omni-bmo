@@ -8,5 +8,7 @@
     "llm_backend": "omni",
     "omni_base_url": "http://127.0.0.1:8799/api/omni",
     "omni_token_env": "PRISMBOT_API_TOKEN",
-    "omni_model": "omni-core:phase2"
+    "omni_model": "omni-core:phase2",
+    "omni_tool_route_mode": "hybrid",
+    "omni_stream_chunk_chars": 48
 }

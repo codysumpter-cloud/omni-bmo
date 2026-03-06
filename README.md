@@ -114,9 +114,17 @@ You can modify the hardware behavior and personality in `config.json`. The `agen
     "llm_backend": "omni",
     "omni_base_url": "http://127.0.0.1:8799/api/omni",
     "omni_token_env": "PRISMBOT_API_TOKEN",
-    "omni_model": "omni-core:phase2"
+    "omni_model": "omni-core:phase2",
+    "omni_tool_route_mode": "hybrid",
+    "omni_stream_chunk_chars": 48
 }
 ```
+
+Omni-specific knobs:
+- `omni_tool_route_mode`: `off|hybrid|direct`
+  - `hybrid` = direct route obvious tool intents (time/search/camera), fallback to JSON-action parsing
+  - `direct` = strongest bias toward direct routing
+- `omni_stream_chunk_chars`: pseudo-stream chunk size for non-stream Omni replies
 
 If `llm_backend` is `omni`, export your token env before running:
 

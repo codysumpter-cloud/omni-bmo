@@ -101,6 +101,8 @@ LLM_BACKEND = str(CURRENT_CONFIG.get("llm_backend", "ollama")).strip().lower()
 OMNI_BASE_URL = str(CURRENT_CONFIG.get("omni_base_url", "http://127.0.0.1:8799/api/omni")).strip().rstrip('/')
 OMNI_TOKEN_ENV = str(CURRENT_CONFIG.get("omni_token_env", "PRISMBOT_API_TOKEN")).strip()
 OMNI_MODEL = str(CURRENT_CONFIG.get("omni_model", "omni-core:phase2")).strip()
+OMNI_TOOL_ROUTE_MODE = str(CURRENT_CONFIG.get("omni_tool_route_mode", "hybrid")).strip().lower()  # off|hybrid|direct
+OMNI_STREAM_CHUNK_CHARS = int(CURRENT_CONFIG.get("omni_stream_chunk_chars", 48))
 
 class BotStates:
     IDLE = "idle"             
@@ -448,6 +450,91 @@ class BotGUI:
 
         return None
 
+    def infer_direct_action(self, text):
+        t = str(text or "").strip()
+        low = t.lower()
+        if not t:
+            return None
+
+        # Time intent
+        if any(k in low for k in ["what time", "time is it", "current time", "tell me the time"]):
+            return {"action": "get_time", "value": "now"}
+
+        # Vision/camera intent
+        if any(k in low for k in ["what do you see", "look around", "take a photo", "take a picture", "show me what you see"]):
+            return {"action": "capture_image", "value": "environment"}
+
+        # Search intent
+        m = re.match(r"^(search|look up|google|find)\s+(.+)$", low)
+        if m and m.group(2).strip():
+            return {"action": "search_web", "value": m.group(2).strip()}
+        if "search for" in low:
+            q = low.split("search for", 1)[1].strip(" .?!")
+            if q:
+                return {"action": "search_web", "value": q}
+
+        return None
+
+    def respond_with_tool_result(self, tool_result, user_text, model_to_use, img_path=None):
+        if tool_result and tool_result.startswith("CHAT_FALLBACK::"):
+            chat_text = tool_result.split("::", 1)[1]
+            self.thinking_sound_active.clear()
+            self.set_state(BotStates.SPEAKING, "Speaking...", cam_path=img_path)
+            self.append_to_text("BOT: ", newline=False)
+            self.append_to_text(chat_text, newline=True)
+            with self.tts_queue_lock:
+                self.tts_queue.append(chat_text)
+            self.session_memory.append({"role": "assistant", "content": chat_text})
+            self.wait_for_tts()
+            self.set_state(BotStates.IDLE, "Ready")
+            return True
+
+        if tool_result == "IMAGE_CAPTURE_TRIGGERED":
+            new_img_path = self.capture_image()
+            if new_img_path:
+                self.chat_and_respond(user_text, img_path=new_img_path)
+            return True
+
+        if tool_result == "INVALID_ACTION":
+            fallback_text = "I am not sure how to do that."
+        elif tool_result == "SEARCH_EMPTY":
+            fallback_text = "I searched, but I couldn't find any news about that."
+        elif tool_result == "SEARCH_ERROR":
+            fallback_text = "I cannot reach the internet right now."
+        elif tool_result:
+            summary_prompt = [
+                {"role": "system", "content": "Summarize this result in one short sentence."},
+                {"role": "user", "content": f"RESULT: {tool_result}\nUser Question: {user_text}"}
+            ]
+            self.set_state(BotStates.THINKING, "Reading...")
+            self.thinking_sound_active.set()
+            final_resp = self.llm_chat_once(model=model_to_use, messages=summary_prompt, img_path=img_path)
+            final_text = final_resp['message']['content']
+
+            self.thinking_sound_active.clear()
+            self.set_state(BotStates.SPEAKING, "Speaking...", cam_path=img_path)
+            self.append_to_text("BOT: ", newline=False)
+            self.append_to_text(final_text, newline=True)
+            with self.tts_queue_lock:
+                self.tts_queue.append(final_text)
+            self.session_memory.append({"role": "assistant", "content": final_text})
+            self.wait_for_tts()
+            self.set_state(BotStates.IDLE, "Ready")
+            return True
+
+        if 'fallback_text' in locals():
+            self.thinking_sound_active.clear()
+            self.set_state(BotStates.SPEAKING, "Speaking...", cam_path=img_path)
+            self.append_to_text("BOT: ", newline=False)
+            self.append_to_text(fallback_text, newline=True)
+            with self.tts_queue_lock:
+                self.tts_queue.append(fallback_text)
+            self.wait_for_tts()
+            self.set_state(BotStates.IDLE, "Ready")
+            return True
+
+        return False
+
     # =========================================================================
     # 4. CORE LOGIC
     # =========================================================================
@@ -698,10 +785,18 @@ class BotGUI:
             return []
 
         chunks = []
+        # Prefer sentence-ish chunks, then sub-chunk to keep UI/TTS responsive.
         for part in re.split(r"(?<=[\.!\?])\s+", content):
             part = part.strip()
-            if part:
+            if not part:
+                continue
+            if len(part) <= max(20, OMNI_STREAM_CHUNK_CHARS):
                 chunks.append({"message": {"content": part + (" " if not part.endswith((".", "!", "?")) else "")}})
+                continue
+            for i in range(0, len(part), max(20, OMNI_STREAM_CHUNK_CHARS)):
+                sub = part[i:i + max(20, OMNI_STREAM_CHUNK_CHARS)]
+                if sub:
+                    chunks.append({"message": {"content": sub}})
         return chunks or [{"message": {"content": content}}]
 
     def llm_chat_once(self, model, messages, img_path=None):
@@ -732,7 +827,16 @@ class BotGUI:
         else:
             user_msg = {"role": "user", "content": text}
             messages = self.permanent_memory + self.session_memory + [user_msg]
-        
+
+        # Milestone B: optional direct tool routing for Omni to reduce action-JSON dependence.
+        if LLM_BACKEND == "omni" and not img_path and OMNI_TOOL_ROUTE_MODE in {"hybrid", "direct"}:
+            direct_action = self.infer_direct_action(text)
+            if direct_action:
+                self.set_state(BotStates.THINKING, "Running action...", cam_path=img_path)
+                tool_result = self.execute_action_and_get_result(direct_action)
+                if self.respond_with_tool_result(tool_result, text, model_to_use, img_path=img_path):
+                    return
+
         self.thinking_sound_active.set()
         threading.Thread(target=self._run_thinking_sound_loop, daemon=True).start()
         
@@ -774,68 +878,8 @@ class BotGUI:
                 action_data = self.extract_json_from_text(full_response_buffer)
                 if action_data:
                     tool_result = self.execute_action_and_get_result(action_data)
-
-                    if tool_result and tool_result.startswith("CHAT_FALLBACK::"):
-                        chat_text = tool_result.split("::", 1)[1]
-                        self.thinking_sound_active.clear()
-                        self.set_state(BotStates.SPEAKING, "Speaking...", cam_path=img_path)
-                        self.append_to_text("BOT: ", newline=False)
-                        self.append_to_text(chat_text, newline=True)
-                        with self.tts_queue_lock: self.tts_queue.append(chat_text)
-                        self.session_memory.append({"role": "assistant", "content": chat_text})
-                        self.wait_for_tts()
-                        self.set_state(BotStates.IDLE, "Ready")
+                    if self.respond_with_tool_result(tool_result, text, model_to_use, img_path=img_path):
                         return
-
-                    if tool_result == "IMAGE_CAPTURE_TRIGGERED":
-                        new_img_path = self.capture_image()
-                        if new_img_path:
-                            self.chat_and_respond(text, img_path=new_img_path)
-                            return 
-
-                    elif tool_result == "INVALID_ACTION":
-                        fallback_text = "I am not sure how to do that."
-                        self.thinking_sound_active.clear()
-                        self.set_state(BotStates.SPEAKING, "Speaking...", cam_path=img_path)
-                        self.append_to_text("BOT: ", newline=False)
-                        self.append_to_text(fallback_text, newline=True)
-                        with self.tts_queue_lock: self.tts_queue.append(fallback_text)
-
-                    elif tool_result == "SEARCH_EMPTY":
-                        fallback_text = "I searched, but I couldn't find any news about that."
-                        self.thinking_sound_active.clear()
-                        self.set_state(BotStates.SPEAKING, "Speaking...", cam_path=img_path)
-                        self.append_to_text("BOT: ", newline=False)
-                        self.append_to_text(fallback_text, newline=True)
-                        with self.tts_queue_lock: self.tts_queue.append(fallback_text)
-
-                    elif tool_result == "SEARCH_ERROR":
-                        fallback_text = "I cannot reach the internet right now."
-                        self.thinking_sound_active.clear()
-                        self.set_state(BotStates.SPEAKING, "Speaking...", cam_path=img_path)
-                        self.append_to_text("BOT: ", newline=False)
-                        self.append_to_text(fallback_text, newline=True)
-                        with self.tts_queue_lock: self.tts_queue.append(fallback_text)
-
-                    elif tool_result:
-                        summary_prompt = [
-                            {"role": "system", "content": "Summarize this result in one short sentence."},
-                            {"role": "user", "content": f"RESULT: {tool_result}\nUser Question: {text}"}
-                        ]
-                        
-                        self.set_state(BotStates.THINKING, "Reading...")
-                        self.thinking_sound_active.set()
-                        
-                        final_resp = self.llm_chat_once(model=model_to_use, messages=summary_prompt, img_path=img_path)
-                        final_text = final_resp['message']['content']
-                        
-                        self.thinking_sound_active.clear()
-                        self.set_state(BotStates.SPEAKING, "Speaking...", cam_path=img_path)
-                        
-                        self.append_to_text("BOT: ", newline=False)
-                        self.append_to_text(final_text, newline=True)
-                        with self.tts_queue_lock: self.tts_queue.append(final_text)
-                        self.session_memory.append({"role": "assistant", "content": final_text})
             else:
                 self.append_to_text("")
                 self.session_memory.append({"role": "assistant", "content": full_response_buffer}) 
