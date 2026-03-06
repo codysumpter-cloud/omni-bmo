@@ -177,6 +177,21 @@ systemctl --user enable --now bmo-omni-agent.service
 
 See: `docs/BMO_OMNI_UPGRADE_PLAN.md` for milestone roadmap and guardrails.
 
+## 🧠 Learn-First (before shell build)
+
+We are intentionally in a learning-first phase before any enclosure work.
+
+- Follow: `docs/LEARNING_FIRST_CHECKLIST.md`
+- Architecture notes: `OMNI_INTEGRATION_MAP.md`
+
+Upstream sync commands:
+
+```bash
+git fetch upstream main
+git log --oneline upstream/main..HEAD   # our additions
+git log --oneline HEAD..upstream/main   # upstream changes not yet merged
+```
+
 ## ⚠️ Troubleshooting
 
 * **"No search library found":** If web search fails, ensure you are in the virtual environment and `duckduckgo-search` is installed via pip.
