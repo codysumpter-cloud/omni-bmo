@@ -28,7 +28,9 @@ import atexit
 import datetime
 import warnings
 import wave
-import struct 
+import struct
+import urllib.request
+import urllib.error
 
 # Suppress harmless library warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning, module="duckduckgo_search")
@@ -65,7 +67,11 @@ DEFAULT_CONFIG = {
     "voice_model": "piper/en_GB-semaine-medium.onnx",
     "chat_memory": True,
     "camera_rotation": 0,
-    "system_prompt_extras": ""
+    "system_prompt_extras": "",
+    "llm_backend": "ollama",  # ollama|omni
+    "omni_base_url": "http://127.0.0.1:8799/api/omni",
+    "omni_token_env": "PRISMBOT_API_TOKEN",
+    "omni_model": "omni-core:phase2"
 }
 
 # LLM SETTINGS
@@ -91,6 +97,10 @@ def load_config():
 CURRENT_CONFIG = load_config()
 TEXT_MODEL = CURRENT_CONFIG["text_model"]
 VISION_MODEL = CURRENT_CONFIG["vision_model"]
+LLM_BACKEND = str(CURRENT_CONFIG.get("llm_backend", "ollama")).strip().lower()
+OMNI_BASE_URL = str(CURRENT_CONFIG.get("omni_base_url", "http://127.0.0.1:8799/api/omni")).strip().rstrip('/')
+OMNI_TOKEN_ENV = str(CURRENT_CONFIG.get("omni_token_env", "PRISMBOT_API_TOKEN")).strip()
+OMNI_MODEL = str(CURRENT_CONFIG.get("omni_model", "omni-core:phase2")).strip()
 
 class BotStates:
     IDLE = "idle"             
@@ -240,7 +250,8 @@ class BotGUI:
         self.save_chat_history()
         
         try:
-            ollama.generate(model=TEXT_MODEL, prompt="", keep_alive=0)
+            if LLM_BACKEND != "omni":
+                ollama.generate(model=TEXT_MODEL, prompt="", keep_alive=0)
         except: pass
 
         self.master.quit()
@@ -483,7 +494,8 @@ class BotGUI:
     def warm_up_logic(self):
         self.set_state(BotStates.WARMUP, "Warming up brains...")
         try:
-            ollama.generate(model=TEXT_MODEL, prompt="", keep_alive=-1)
+            if LLM_BACKEND != "omni":
+                ollama.generate(model=TEXT_MODEL, prompt="", keep_alive=-1)
         except Exception as e:
             print(f"Failed to load {TEXT_MODEL}: {e}", flush=True)
         self.play_sound(self.get_random_sound(greeting_sounds_dir))
@@ -646,6 +658,57 @@ class BotGUI:
             print(f"Camera Error: {e}")
             return None
 
+    def _omni_headers(self):
+        headers = {"content-type": "application/json"}
+        token = os.getenv(OMNI_TOKEN_ENV, "").strip()
+        if token:
+            headers["authorization"] = f"Bearer {token}"
+        return headers
+
+    def _omni_chat_once(self, model, messages):
+        payload = {
+            "messages": messages,
+            "model": model or OMNI_MODEL or TEXT_MODEL,
+        }
+        req = urllib.request.Request(
+            f"{OMNI_BASE_URL}/chat/completions",
+            method="POST",
+            data=json.dumps(payload).encode("utf-8"),
+            headers=self._omni_headers(),
+        )
+        with urllib.request.urlopen(req, timeout=90) as r:
+            data = json.loads(r.read().decode("utf-8", "ignore"))
+
+        choices = data.get("choices") or []
+        content = ""
+        if choices:
+            content = str(((choices[0] or {}).get("message") or {}).get("content") or "")
+        if not content:
+            content = str(data.get("output") or "")
+        return {"message": {"content": content}}
+
+    def llm_chat_stream(self, model, messages, img_path=None):
+        # Keep vision path on Ollama for now (Omni text endpoint doesn't ingest local image files directly).
+        if img_path or LLM_BACKEND != "omni":
+            return ollama.chat(model=model, messages=messages, stream=True, options=OLLAMA_OPTIONS)
+
+        one = self._omni_chat_once(model, messages)
+        content = str((one.get("message") or {}).get("content") or "")
+        if not content:
+            return []
+
+        chunks = []
+        for part in re.split(r"(?<=[\.!\?])\s+", content):
+            part = part.strip()
+            if part:
+                chunks.append({"message": {"content": part + (" " if not part.endswith((".", "!", "?")) else "")}})
+        return chunks or [{"message": {"content": content}}]
+
+    def llm_chat_once(self, model, messages, img_path=None):
+        if img_path or LLM_BACKEND != "omni":
+            return ollama.chat(model=model, messages=messages, stream=False, options=OLLAMA_OPTIONS)
+        return self._omni_chat_once(model, messages)
+
     # =========================================================================
     # 5. CHAT & RESPOND
     # =========================================================================
@@ -660,7 +723,7 @@ class BotGUI:
             self.set_state(BotStates.IDLE, "Memory Wiped")
             return
 
-        model_to_use = VISION_MODEL if img_path else TEXT_MODEL
+        model_to_use = VISION_MODEL if img_path else (OMNI_MODEL if LLM_BACKEND == "omni" else TEXT_MODEL)
         self.set_state(BotStates.THINKING, "Thinking...", cam_path=img_path)
         
         messages = []
@@ -677,7 +740,7 @@ class BotGUI:
         sentence_buffer = "" 
         
         try:
-            stream = ollama.chat(model=model_to_use, messages=messages, stream=True, options=OLLAMA_OPTIONS)
+            stream = self.llm_chat_stream(model=model_to_use, messages=messages, img_path=img_path)
             
             is_action_mode = False
             
@@ -763,7 +826,7 @@ class BotGUI:
                         self.set_state(BotStates.THINKING, "Reading...")
                         self.thinking_sound_active.set()
                         
-                        final_resp = ollama.chat(model=model_to_use, messages=summary_prompt, stream=False, options=OLLAMA_OPTIONS)
+                        final_resp = self.llm_chat_once(model=model_to_use, messages=summary_prompt, img_path=img_path)
                         final_text = final_resp['message']['content']
                         
                         self.thinking_sound_active.clear()

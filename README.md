@@ -110,8 +110,18 @@ You can modify the hardware behavior and personality in `config.json`. The `agen
     "voice_model": "piper/en_GB-semaine-medium.onnx",
     "chat_memory": true,
     "camera_rotation": 0,
-    "system_prompt_extras": "You are a helpful robot assistant. Keep responses short and cute."
+    "system_prompt_extras": "You are a helpful robot assistant. Keep responses short and cute.",
+    "llm_backend": "omni",
+    "omni_base_url": "http://127.0.0.1:8799/api/omni",
+    "omni_token_env": "PRISMBOT_API_TOKEN",
+    "omni_model": "omni-core:phase2"
 }
+```
+
+If `llm_backend` is `omni`, export your token env before running:
+
+```bash
+export PRISMBOT_API_TOKEN="<your_token>"
 ```
 
 ---
