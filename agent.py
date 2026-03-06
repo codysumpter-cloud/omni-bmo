@@ -77,6 +77,12 @@ DEFAULT_CONFIG = {
     "omni_request_timeout_sec": 90,
     "omni_vision_mode": "hybrid",  # local|hybrid
 
+    # Milestone G transport routing
+    "transport_mode": "auto",  # online|mesh|reticulum_fallback|auto
+    "mesh_health_check_url": "",
+    "reticulum_bridge_endpoint": "",
+    "transport_failover_timeout_sec": 2.0,
+
     # Milestone E latency / wake / barge-in tuning
     "wake_word_threshold": 0.45,
     "ptt_toggle_debounce_sec": 0.25,
@@ -121,6 +127,12 @@ OMNI_STREAM_CHUNK_CHARS = int(CURRENT_CONFIG.get("omni_stream_chunk_chars", 48))
 OMNI_FALLBACK_TO_OLLAMA = bool(CURRENT_CONFIG.get("omni_fallback_to_ollama", True))
 OMNI_REQUEST_TIMEOUT_SEC = int(CURRENT_CONFIG.get("omni_request_timeout_sec", 90))
 OMNI_VISION_MODE = str(CURRENT_CONFIG.get("omni_vision_mode", "hybrid")).strip().lower()  # local|hybrid
+
+# Transport selection (Milestone G)
+TRANSPORT_MODE = str(CURRENT_CONFIG.get("transport_mode", "auto")).strip().lower()  # online|mesh|reticulum_fallback|auto
+MESH_HEALTH_CHECK_URL = str(CURRENT_CONFIG.get("mesh_health_check_url", "")).strip()
+RETICULUM_BRIDGE_ENDPOINT = str(CURRENT_CONFIG.get("reticulum_bridge_endpoint", "")).strip()
+TRANSPORT_FAILOVER_TIMEOUT_SEC = float(CURRENT_CONFIG.get("transport_failover_timeout_sec", 2.0))
 
 # Latency tuning knobs
 WAKE_WORD_THRESHOLD = float(CURRENT_CONFIG.get("wake_word_threshold", 0.45))
@@ -201,6 +213,9 @@ class BotGUI:
         self.animations = {}
         self.current_frame_index = 0
         self.current_overlay_image = None
+
+        self.current_transport_mode = "online"
+        self.transport_last_reason = "init"
         
         self.permanent_memory = self.load_chat_history()
         self.session_memory = []
@@ -368,13 +383,20 @@ class BotGUI:
         speed = 50 if self.current_state == BotStates.SPEAKING else 500
         self.master.after(speed, self.update_animation)
 
+    def _status_with_transport(self, msg):
+        base = str(msg or "").strip()
+        mode = str(getattr(self, 'current_transport_mode', 'online') or 'online')
+        if not base:
+            return f"net:{mode}"
+        return f"{base} | net:{mode}"
+
     def set_state(self, state, msg="", cam_path=None):
         def _update():
             if msg: print(f"[STATE] {state.upper()}: {msg}", flush=True)
             if self.current_state != state:
                 self.current_state = state
                 self.current_frame_index = 0
-            if msg: self.status_var.set(msg)
+            if msg: self.status_var.set(self._status_with_transport(msg))
             if cam_path and os.path.exists(cam_path) and state in [BotStates.THINKING, BotStates.SPEAKING]:
                 try:
                     img = Image.open(cam_path).resize((self.OVERLAY_WIDTH, self.OVERLAY_HEIGHT))
@@ -781,6 +803,57 @@ class BotGUI:
             headers["authorization"] = f"Bearer {token}"
         return headers
 
+    def _http_ping(self, url, timeout_sec=2.0):
+        try:
+            req = urllib.request.Request(url, method="GET")
+            with urllib.request.urlopen(req, timeout=max(0.5, float(timeout_sec))) as r:
+                return 200 <= int(getattr(r, "status", 200)) < 500
+        except Exception:
+            return False
+
+    def select_transport_mode(self):
+        mode = TRANSPORT_MODE
+        reason = "configured"
+
+        if mode in {"online", "mesh", "reticulum_fallback"}:
+            self.current_transport_mode = mode
+            self.transport_last_reason = reason
+            return mode
+
+        # auto mode
+        omni_health = f"{OMNI_BASE_URL}/health"
+        omni_ok = self._http_ping(omni_health, timeout_sec=TRANSPORT_FAILOVER_TIMEOUT_SEC)
+
+        mesh_ok = False
+        if MESH_HEALTH_CHECK_URL:
+            mesh_ok = self._http_ping(MESH_HEALTH_CHECK_URL, timeout_sec=TRANSPORT_FAILOVER_TIMEOUT_SEC)
+
+        if mesh_ok:
+            mode = "mesh"
+            reason = "mesh-health-ok"
+        elif omni_ok:
+            mode = "online"
+            reason = "omni-health-ok"
+        elif RETICULUM_BRIDGE_ENDPOINT:
+            mode = "reticulum_fallback"
+            reason = "omni-health-failed"
+        else:
+            mode = "online"
+            reason = "fallback-online-no-reticulum"
+
+        self.current_transport_mode = mode
+        self.transport_last_reason = reason
+        return mode
+
+    def reticulum_fallback_chat(self, user_text, messages):
+        # Milestone G stub: replace with real Reticulum bridge call in later milestone.
+        print(f"[RETICULUM_STUB] endpoint={RETICULUM_BRIDGE_ENDPOINT or 'unset'} user={user_text[:80]!r}", flush=True)
+        return {
+            "message": {
+                "content": "Reticulum fallback is configured as a placeholder right now. Omni network path is unavailable; local fallback should engage automatically."
+            }
+        }
+
     def _omni_chat_once(self, model, messages):
         payload = {
             "messages": messages,
@@ -845,7 +918,14 @@ class BotGUI:
 
     def llm_chat_stream(self, model, messages, img_path=None):
         if LLM_BACKEND != "omni":
+            self.current_transport_mode = "online"
             return ollama.chat(model=model, messages=messages, stream=True, options=OLLAMA_OPTIONS)
+
+        selected_mode = self.select_transport_mode()
+        if selected_mode == "reticulum_fallback":
+            last_user = str((messages[-1] or {}).get("content") or "") if isinstance(messages, list) and messages else ""
+            one = self.reticulum_fallback_chat(last_user, messages)
+            return self._chunk_text_for_stream(str((one.get("message") or {}).get("content") or ""))
 
         try:
             omni_messages = self._build_omni_messages(messages, img_path=img_path)
@@ -857,19 +937,30 @@ class BotGUI:
         except Exception as e:
             print(f"Omni stream error: {e}")
             if OMNI_FALLBACK_TO_OLLAMA:
+                self.current_transport_mode = "reticulum_fallback"
+                self.transport_last_reason = "omni-error->ollama"
                 fallback_model = VISION_MODEL if img_path else TEXT_MODEL
                 return ollama.chat(model=fallback_model, messages=messages, stream=True, options=OLLAMA_OPTIONS)
             raise
 
     def llm_chat_once(self, model, messages, img_path=None):
         if LLM_BACKEND != "omni":
+            self.current_transport_mode = "online"
             return ollama.chat(model=model, messages=messages, stream=False, options=OLLAMA_OPTIONS)
+
+        selected_mode = self.select_transport_mode()
+        if selected_mode == "reticulum_fallback":
+            last_user = str((messages[-1] or {}).get("content") or "") if isinstance(messages, list) and messages else ""
+            return self.reticulum_fallback_chat(last_user, messages)
+
         try:
             omni_messages = self._build_omni_messages(messages, img_path=img_path)
             return self._omni_chat_once(model if not img_path else OMNI_MODEL, omni_messages)
         except Exception as e:
             print(f"Omni once error: {e}")
             if OMNI_FALLBACK_TO_OLLAMA:
+                self.current_transport_mode = "reticulum_fallback"
+                self.transport_last_reason = "omni-error->ollama"
                 fallback_model = VISION_MODEL if img_path else TEXT_MODEL
                 return ollama.chat(model=fallback_model, messages=messages, stream=False, options=OLLAMA_OPTIONS)
             raise
