@@ -122,7 +122,8 @@ Success criteria met:
 
 ## Immediate next actions
 
-1) Add transport config placeholders to `config.json`
-2) Add health-check/transport decision helper in `agent.py`
-3) Add HUD status line for selected transport mode
-4) Build minimal `reticulum_fallback` adapter interface (stub + logging)
+1) Add transport config placeholders to `config.json` ✅
+2) Add health-check/transport decision helper in `agent.py` ✅
+3) Add HUD status line for selected transport mode ✅
+4) Build minimal `reticulum_fallback` adapter interface (stub + logging) ✅
+5) Track OpenMANET upstream repos and no-fork policy (`docs/OPENMANET_UPSTREAM.md`) ✅

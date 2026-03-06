@@ -233,6 +233,7 @@ See: `docs/BMO_OMNI_UPGRADE_PLAN.md` for milestone roadmap and guardrails.
 See: `docs/COMMS_LAYER_PLAN.md` for mesh/Reticulum resilience roadmap.
 See: `docs/VALIDATION_MATRIX.md` for release/stability checks.
 See: `docs/ATAK_INTEGRATION_PLAN.md` for ATAK bridge roadmap.
+See: `docs/OPENMANET_UPSTREAM.md` for upstream tracking policy and repo map.
 
 ## 🧠 Learn-First (before shell build)
 
