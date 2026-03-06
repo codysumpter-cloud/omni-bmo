@@ -133,12 +133,19 @@ Omni-specific knobs:
 - `omni_vision_mode`: `local|hybrid`
   - `hybrid` = get local vision caption, then answer with Omni text model
 
-Transport knobs (Milestone G/H/J):
+Transport knobs (Milestone G/H/J/K):
 - `transport_mode`: `online|mesh|reticulum_fallback|auto`
 - `mesh_health_check_url`: URL used to detect mesh path health
 - `reticulum_bridge_endpoint`: HTTP bridge endpoint for Reticulum relay integration
 - `reticulum_bridge_token_env`: env var name for optional bridge bearer token
 - `transport_failover_timeout_sec`: timeout budget for transport health checks
+
+Milestone K local bridge mock (for testing):
+
+```bash
+python3 adapters/reticulum_bridge_mock.py --host 127.0.0.1 --port 8788
+./scripts/test_reticulum_bridge.sh http://127.0.0.1:8788/bridge
+```
 
 Reticulum bridge response contract (recommended):
 
@@ -225,6 +232,7 @@ systemctl --user enable --now bmo-omni-agent.service
 See: `docs/BMO_OMNI_UPGRADE_PLAN.md` for milestone roadmap and guardrails.
 See: `docs/COMMS_LAYER_PLAN.md` for mesh/Reticulum resilience roadmap.
 See: `docs/VALIDATION_MATRIX.md` for release/stability checks.
+See: `docs/ATAK_INTEGRATION_PLAN.md` for ATAK bridge roadmap.
 
 ## 🧠 Learn-First (before shell build)
 
