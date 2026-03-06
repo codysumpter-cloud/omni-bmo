@@ -150,6 +150,33 @@ This software is a generic framework. You can give it a new personality by repla
 
 ---
 
+## 🚀 BMO × Omni Ops Quickstart
+
+Run health checks:
+
+```bash
+./scripts/bmo_omni_doctor.sh
+```
+
+Launch with helper:
+
+```bash
+./scripts/bmo_omni_launch.sh
+```
+
+Systemd (user) install:
+
+```bash
+mkdir -p ~/.config/systemd/user
+cp deploy/bmo-omni-agent.service ~/.config/systemd/user/
+cp deploy/bmo-omni.env.example ~/.config/bmo-omni.env
+# edit token in ~/.config/bmo-omni.env
+systemctl --user daemon-reload
+systemctl --user enable --now bmo-omni-agent.service
+```
+
+See: `docs/BMO_OMNI_UPGRADE_PLAN.md` for milestone roadmap and guardrails.
+
 ## ⚠️ Troubleshooting
 
 * **"No search library found":** If web search fails, ensure you are in the virtual environment and `duckduckgo-search` is installed via pip.

@@ -1,0 +1,16 @@
+[Unit]
+Description=BMO Omni Agent
+After=network-online.target sound.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/be-more-agent
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=-%h/.config/bmo-omni.env
+ExecStart=%h/be-more-agent/scripts/bmo_omni_launch.sh
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target
