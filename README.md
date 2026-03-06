@@ -184,6 +184,12 @@ Run health checks:
 ./scripts/bmo_omni_doctor.sh
 ```
 
+Run validation matrix static checks:
+
+```bash
+./scripts/run_validation_matrix.sh
+```
+
 Apply a latency profile:
 
 ```bash
@@ -209,6 +215,7 @@ systemctl --user enable --now bmo-omni-agent.service
 
 See: `docs/BMO_OMNI_UPGRADE_PLAN.md` for milestone roadmap and guardrails.
 See: `docs/COMMS_LAYER_PLAN.md` for mesh/Reticulum resilience roadmap.
+See: `docs/VALIDATION_MATRIX.md` for release/stability checks.
 
 ## 🧠 Learn-First (before shell build)
 
