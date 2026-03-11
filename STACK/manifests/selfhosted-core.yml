@@ -1,0 +1,20 @@
+version: 1
+services:
+  - name: postgres
+    purpose: primary app database
+    phase: A-now
+  - name: redis
+    purpose: cache + queue broker
+    phase: A-now
+  - name: minio
+    purpose: object storage for assets/media
+    phase: A-now
+  - name: prometheus
+    purpose: metrics scraping
+    phase: A-now
+  - name: grafana
+    purpose: dashboarding + alert views
+    phase: A-now
+  - name: sentry-compatible
+    purpose: centralized error tracking
+    phase: B-later
