@@ -1,0 +1,482 @@
+[
+  {
+    "title": "[omni-core-runtime] Harden startup sequence and dependency preflight",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `core-runtime`.\n\n## Goal\nHarden startup sequence and dependency preflight\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-core-runtime] Add structured runtime error catalog",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `core-runtime`.\n\n## Goal\nAdd structured runtime error catalog\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-core-runtime] Implement safe auto-restart policy",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `core-runtime`.\n\n## Goal\nImplement safe auto-restart policy\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-core-runtime] Add config schema validation at boot",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `core-runtime`.\n\n## Goal\nAdd config schema validation at boot\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-core-runtime] Add backup-before-write for config updates",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `core-runtime`.\n\n## Goal\nAdd backup-before-write for config updates\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-core-runtime] Add health endpoint summary output",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `core-runtime`.\n\n## Goal\nAdd health endpoint summary output\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-core-runtime] Add latency mode switch telemetry",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `core-runtime`.\n\n## Goal\nAdd latency mode switch telemetry\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-core-runtime] Add secure token presence checks",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `core-runtime`.\n\n## Goal\nAdd secure token presence checks\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-core-runtime] Add deterministic warmup state machine tests",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `core-runtime`.\n\n## Goal\nAdd deterministic warmup state machine tests\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-core-runtime] Document failure recovery runbook",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `core-runtime`.\n\n## Goal\nDocument failure recovery runbook\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-audio-stack] Add microphone auto-calibration command",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `audio-stack`.\n\n## Goal\nAdd microphone auto-calibration command\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-audio-stack] Add speaker playback self-test command",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `audio-stack`.\n\n## Goal\nAdd speaker playback self-test command\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-audio-stack] Add ALSA profile presets for common devices",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `audio-stack`.\n\n## Goal\nAdd ALSA profile presets for common devices\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-audio-stack] Add voice activity threshold tuning helper",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `audio-stack`.\n\n## Goal\nAdd voice activity threshold tuning helper\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-audio-stack] Add barge-in reliability metrics",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `audio-stack`.\n\n## Goal\nAdd barge-in reliability metrics\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-audio-stack] Add audio device fallback selector",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `audio-stack`.\n\n## Goal\nAdd audio device fallback selector\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-audio-stack] Add low-latency mode profile for Pi",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `audio-stack`.\n\n## Goal\nAdd low-latency mode profile for Pi\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-audio-stack] Add audio debug snapshot export",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `audio-stack`.\n\n## Goal\nAdd audio debug snapshot export\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-audio-stack] Add TTS output clipping guard",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `audio-stack`.\n\n## Goal\nAdd TTS output clipping guard\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-audio-stack] Document audio troubleshooting decision tree",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `audio-stack`.\n\n## Goal\nDocument audio troubleshooting decision tree\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-vision-stack] Add camera warmup timeout fallback",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `vision-stack`.\n\n## Goal\nAdd camera warmup timeout fallback\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-vision-stack] Add vision confidence threshold policy",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `vision-stack`.\n\n## Goal\nAdd vision confidence threshold policy\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-vision-stack] Add local frame capture diagnostics",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `vision-stack`.\n\n## Goal\nAdd local frame capture diagnostics\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-vision-stack] Add privacy mode for camera disable/enable",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `vision-stack`.\n\n## Goal\nAdd privacy mode for camera disable/enable\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-vision-stack] Add rotation and framing auto-check",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `vision-stack`.\n\n## Goal\nAdd rotation and framing auto-check\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-vision-stack] Add low-light warning detection",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `vision-stack`.\n\n## Goal\nAdd low-light warning detection\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-vision-stack] Add vision response length controls",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `vision-stack`.\n\n## Goal\nAdd vision response length controls\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-vision-stack] Add vision model fallback behavior",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `vision-stack`.\n\n## Goal\nAdd vision model fallback behavior\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-vision-stack] Add camera error recovery retries",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `vision-stack`.\n\n## Goal\nAdd camera error recovery retries\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-vision-stack] Document vision safety and privacy runbook",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `vision-stack`.\n\n## Goal\nDocument vision safety and privacy runbook\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-transport-omni] Add transport mode telemetry counters",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `transport-omni`.\n\n## Goal\nAdd transport mode telemetry counters\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-transport-omni] Add reticulum bridge latency metrics",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `transport-omni`.\n\n## Goal\nAdd reticulum bridge latency metrics\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-transport-omni] Add network doctor enriched report",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `transport-omni`.\n\n## Goal\nAdd network doctor enriched report\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-transport-omni] Add timeout profiles per runtime mode",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `transport-omni`.\n\n## Goal\nAdd timeout profiles per runtime mode\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-transport-omni] Add online->mesh fallback threshold tuning",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `transport-omni`.\n\n## Goal\nAdd online->mesh fallback threshold tuning\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-transport-omni] Add bridge auth failure diagnostics",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `transport-omni`.\n\n## Goal\nAdd bridge auth failure diagnostics\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-transport-omni] Add transport health dashboard output",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `transport-omni`.\n\n## Goal\nAdd transport health dashboard output\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-transport-omni] Add message retry strategy by mode",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `transport-omni`.\n\n## Goal\nAdd message retry strategy by mode\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-transport-omni] Add command override lock for operator",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `transport-omni`.\n\n## Goal\nAdd command override lock for operator\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-transport-omni] Document transport failover playbook",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `transport-omni`.\n\n## Goal\nDocument transport failover playbook\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-ux-personality] Add concise response mode toggle",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `ux-personality`.\n\n## Goal\nAdd concise response mode toggle\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-ux-personality] Add personality presets (helper/friendly/pro)",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `ux-personality`.\n\n## Goal\nAdd personality presets (helper/friendly/pro)\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-ux-personality] Add session recap command",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `ux-personality`.\n\n## Goal\nAdd session recap command\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-ux-personality] Add what-changed command output",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `ux-personality`.\n\n## Goal\nAdd what-changed command output\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-ux-personality] Add user teaching mode hints",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `ux-personality`.\n\n## Goal\nAdd user teaching mode hints\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-ux-personality] Add short-vs-detailed answer setting",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `ux-personality`.\n\n## Goal\nAdd short-vs-detailed answer setting\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-ux-personality] Add safe humor mode boundaries",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `ux-personality`.\n\n## Goal\nAdd safe humor mode boundaries\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-ux-personality] Add wake acknowledgement variant selection",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `ux-personality`.\n\n## Goal\nAdd wake acknowledgement variant selection\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-ux-personality] Add interaction quality feedback command",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `ux-personality`.\n\n## Goal\nAdd interaction quality feedback command\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-ux-personality] Document UX behavior matrix",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `ux-personality`.\n\n## Goal\nDocument UX behavior matrix\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-quality-pipeline] Expand promptfoo suite to 12 tests",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `quality-pipeline`.\n\n## Goal\nExpand promptfoo suite to 12 tests\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-quality-pipeline] Add prompt injection red-team checks",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `quality-pipeline`.\n\n## Goal\nAdd prompt injection red-team checks\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-quality-pipeline] Add secret leakage refusal tests",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `quality-pipeline`.\n\n## Goal\nAdd secret leakage refusal tests\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-quality-pipeline] Add CI status badge and docs",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `quality-pipeline`.\n\n## Goal\nAdd CI status badge and docs\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-quality-pipeline] Add pre-PR check script to CI hard gate",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `quality-pipeline`.\n\n## Goal\nAdd pre-PR check script to CI hard gate\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-quality-pipeline] Add weekly quality report script",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `quality-pipeline`.\n\n## Goal\nAdd weekly quality report script\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-quality-pipeline] Add regression baseline snapshots",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `quality-pipeline`.\n\n## Goal\nAdd regression baseline snapshots\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-quality-pipeline] Add test data fixtures for common intents",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `quality-pipeline`.\n\n## Goal\nAdd test data fixtures for common intents\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-quality-pipeline] Add release checklist for model/prompt changes",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `quality-pipeline`.\n\n## Goal\nAdd release checklist for model/prompt changes\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  },
+  {
+    "title": "[omni-quality-pipeline] Document quality governance process",
+    "labels": [
+      "phase-2",
+      "feature"
+    ],
+    "body": "## Context\nPhase 2 backlog item for Omni-BMO track `quality-pipeline`.\n\n## Goal\nDocument quality governance process\n\n## Scope\n- Implement minimal viable version\n- Keep change reversible and documented\n\n## Verification\n- Run: bash scripts/omni_prepr_check.sh\n- Add/update docs if behavior changed\n\n## Done condition\n- [ ] Acceptance criteria met\n- [ ] Verification passed\n- [ ] Docs updated\n- [ ] Follow-up task identified"
+  }
+]
