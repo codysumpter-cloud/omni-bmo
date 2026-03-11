@@ -1,0 +1,36 @@
+name: Experiment / Spike
+description: Time-boxed investigation or prototype
+title: "spike: <short experiment title>"
+labels: ["experiment"]
+body:
+  - type: input
+    id: timebox
+    attributes:
+      label: Timebox
+      placeholder: e.g. 2h, 1 day
+    validations:
+      required: true
+  - type: textarea
+    id: hypothesis
+    attributes:
+      label: Hypothesis
+      placeholder: If we do X, we expect Y because Z.
+    validations:
+      required: true
+  - type: textarea
+    id: plan
+    attributes:
+      label: Test plan
+      placeholder: |
+        1)
+        2)
+        3)
+    validations:
+      required: true
+  - type: textarea
+    id: deliverables
+    attributes:
+      label: Deliverables
+      placeholder: |
+        - findings summary
+        - keep/kill recommendation
