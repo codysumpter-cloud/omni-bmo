@@ -1,0 +1,8 @@
+[Unit]
+Description=Omni-BMO Council Daily Audit
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/.openclaw/workspace/omni-bmo
+ExecStart=/usr/bin/bash %h/.openclaw/workspace/omni-bmo/scripts/council_daily_audit.sh
