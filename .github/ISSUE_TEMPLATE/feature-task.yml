@@ -1,0 +1,54 @@
+name: Feature Task
+description: Scoped feature work for Omni-BMO
+title: "feat: <short task title>"
+labels: ["feature"]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      placeholder: What outcome should exist when this task is done?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope (In)
+      placeholder: |
+        -
+        -
+    validations:
+      required: true
+  - type: textarea
+    id: out
+    attributes:
+      label: Out of Scope
+      placeholder: |
+        -
+        -
+  - type: textarea
+    id: files
+    attributes:
+      label: Expected files to change
+      placeholder: |
+        - agent.py
+        - config/*.json
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification commands
+      placeholder: |
+        - bash scripts/omni_prepr_check.sh
+    validations:
+      required: true
+  - type: checkboxes
+    id: done
+    attributes:
+      label: Done when
+      options:
+        - label: Behavior works as expected
+          required: true
+        - label: Safety/rollback notes included
+          required: true
+        - label: Docs updated
+          required: true

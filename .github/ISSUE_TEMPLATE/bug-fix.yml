@@ -1,0 +1,41 @@
+name: Bug Fix
+description: Report and patch a bug in Omni-BMO
+title: "fix: <short bug title>"
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Bug summary
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: verify
+    attributes:
+      label: Verification commands
+      placeholder: |
+        - bash scripts/omni_prepr_check.sh
+    validations:
+      required: true
