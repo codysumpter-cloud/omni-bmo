@@ -278,3 +278,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 **"BMO"** and **"Adventure Time"** are trademarks of **Cartoon Network** (Warner Bros. Discovery).
 
 This project is a **fan creation** built for educational and hobbyist purposes only. It is **not** affiliated with, endorsed by, or connected to Cartoon Network or the official Adventure Time brand in any way. The software provided here is a generic agent framework; users are responsible for the assets they load into it.
+import { RuntimePairingState, RuntimeCapabilityState, RuntimeActionReceipt } from '@prismtek/buddy-core';
