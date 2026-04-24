@@ -1,0 +1,44 @@
+name: basic-ci
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  python-syntax-and-json:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile Python sources
+        run: |
+          python - <<'PY'
+          import pathlib
+          import py_compile
+          for path in pathlib.Path('.').rglob('*.py'):
+              if 'venv' in path.parts or '.git' in path.parts:
+                  continue
+              py_compile.compile(str(path), doraise=True)
+          print('python compilation ok')
+          PY
+
+      - name: Validate JSON files
+        run: |
+          python - <<'PY'
+          import json
+          import pathlib
+          for path in pathlib.Path('.').rglob('*.json'):
+              if 'venv' in path.parts or '.git' in path.parts:
+                  continue
+              with open(path, 'r', encoding='utf-8') as f:
+                  json.load(f)
+          print('json validation ok')
+          PY
